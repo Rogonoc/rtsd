@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
+#include <sys/mman.h>
 
 #define NUM_THREADS 1
 #define BILLION 1000000000L;
