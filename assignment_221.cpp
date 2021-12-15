@@ -6,6 +6,7 @@
 #include <cmath>
 #include <vector>
 #include <sys/mman.h>
+#include <math.h>
 
 #define NUM_THREADS 1
 
