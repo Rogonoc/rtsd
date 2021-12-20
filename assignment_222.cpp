@@ -72,6 +72,53 @@ void *threadFunc(void *pArg)
     return 0;
 }
 
+// Function that prints out logged data
+void information()
+{
+    // Print timings when it is finished with loop
+    for (k = 0; k < 100; k++)
+    {
+        printf("%lf\n", timing[k]);
+    }
+
+    // Mean
+    mean = accumulate(timing.begin(), timing.end(), 0) / timing.size();
+
+    // Variance
+    var = 0;
+    for (n = 0; n < timing.size(); n++)
+    {
+        var += (timing[n] - mean) * (timing[n] - mean);
+    }
+    var = var / timing.size();
+
+    // Relative standard deviation
+    rlt_std = (sqrt(var) / abs(mean)) * 100;
+
+    // Find minimum and maximum
+    min = timing[0];
+    max = timing[0];
+    for(m = 0; m < timing.size(); m++)
+    {
+        // Minimum
+        if(timing[m] < min)
+        {
+            min = timing[m];
+        }
+
+        // Maximum
+        if(timing[m] > max)
+        {
+            max = timing[m];
+        }
+    }
+
+    // Print above parameters
+    printf("\nMINIMUM: %lf \nMAXIMUM: %lf \nMEAN: %lf \nVARIANCE: %lf \nSTANDARD DEVIATION: %lf \nRELATIVE DEVIATION: %lf \n",
+    min, max, mean, var, sqrt(var), rlt_std);
+
+    return;
+}
 
 // Main function
 int main(int argc, char **argv)

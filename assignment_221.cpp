@@ -82,7 +82,7 @@ void information()
     }
 
     // Mean
-    mean = std::accumulate(timing.begin(), timing.end(), 0) / timing.size();
+    mean = accumulate(timing.begin(), timing.end(), 0) / timing.size();
 
     // Variance
     var = 0;
