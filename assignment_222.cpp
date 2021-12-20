@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     // Set a specific stack size
     pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
 
-    // Set scheduler policy and priotrity of pthread
+    // Set scheduler policy and priority of pthread
     pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
     param.sched_priority = 80;
     pthread_attr_setschedparam(&attr, &param);
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     pthread_create(&thread, &attr, threadFunc, NULL);
 
     // Join the thread and wait until it is done
-    pthread_join(thread NULL);
+    pthread_join(thread, NULL);
 
     // Print out recorded data
     information();
