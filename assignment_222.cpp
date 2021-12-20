@@ -12,9 +12,6 @@
 #include <limits.h>
 #include <sched.h>
 
-// Number of threads we want
-#define NUM_THREADS 1
-
 // Global parameters
 std::vector<double>     timing(100);
 double                  mean, var, rlt_std, min, max;
