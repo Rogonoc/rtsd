@@ -58,10 +58,10 @@ void *threadFunc(void *pArg)
         perror("timer_create");
 
     // Timer values
-    new_time.it_interval.tv_sec = 0;
-    new_time.it_interval.tv_nsec = 1000;    // 1 ms that the timer "sleeps" interval-wise
-    new_time.it_value.tv_sec = 0;
-    new_time.it_value.tv_nsec = 1000;       // 1 ms that the timer "sleeps" interval-wise
+    new_time.it_interval.tv_sec = 1;
+    new_time.it_interval.tv_nsec = 0;    // 1 ms that the timer "sleeps" interval-wise
+    new_time.it_value.tv_sec = 1;
+    new_time.it_value.tv_nsec = 0;       // 1 ms that the timer "sleeps" interval-wise
 
     // Set timer
     if (timer_settime(timerid, 0, &new_time, &old_time) == -1)
@@ -70,12 +70,12 @@ void *threadFunc(void *pArg)
     // Let the thread perform computations and time it
     for(i = 0; i < 101; i++)
     {
-        /* ---------- COMPUTATIONAL LOAD ---------- */
-        for (j = 0; j < 100000; j++)
-        {
-            test = pow(test, 0.95);
-        }
-        /* ---------------------------------------- */
+        // /* ---------- COMPUTATIONAL LOAD ---------- */
+        // for (j = 0; j < 100000; j++)
+        // {
+        //     test = pow(test, 0.95);
+        // }
+        // /* ---------------------------------------- */
 
         // Wait (until a signal is raised by the timer)
         if (sigwait(&set, &signum) == -1)
