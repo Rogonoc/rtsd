@@ -70,12 +70,12 @@ void *threadFunc(void *pArg)
     // Let the thread perform computations and time it
     for(i = 0; i < 101; i++)
     {
-        // /* ---------- COMPUTATIONAL LOAD ---------- */
-        // for (j = 0; j < 100000; j++)
-        // {
-        //     test = pow(test, 0.95);
-        // }
-        // /* ---------------------------------------- */
+        /* ---------- COMPUTATIONAL LOAD ---------- */
+        for (j = 0; j < 100000; j++)
+        {
+            test = pow(test, 0.95);
+        }
+        /* ---------------------------------------- */
 
         // Wait (until a signal is raised by the timer)
         if (sigwait(&set, &signum) == -1)
