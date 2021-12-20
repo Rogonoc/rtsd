@@ -58,7 +58,7 @@ void *threadFunc(void *pArg)
         perror("timer_create");
 
     // Timer values
-    new_time.it_interval.tv_sec = 1;
+    new_time.it_interval.tv_sec = 1000000000; // 0.1 sec
     new_time.it_interval.tv_nsec = 0;    // 1 ms that the timer "sleeps" interval-wise
     new_time.it_value.tv_sec = 1;
     new_time.it_value.tv_nsec = 0;       // 1 ms that the timer "sleeps" interval-wise
