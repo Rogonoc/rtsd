@@ -1,13 +1,18 @@
 // Libraries
 #include <stdio.h>
-#include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
+#include <signal.h>
+#include <errno.h>
+#include <time.h>
 #include <numeric>
 // Posix related libraries
 #include <pthread.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/syscall.h>
 #include <sys/mman.h> // Library to lock memory
 #include <limits.h>
 #include <sched.h>
@@ -17,19 +22,53 @@
 
 // Global parameters
 std::vector<double>     timing(100);
+timer_t                 timerid;
 double                  mean, var, rlt_std, min, max;
-double                  curr_sec, curr_nsec, prev_sec, prev_nsec;
+double                  curr_sec, prev_sec, curr_nsec, prev_nsec;
 int                     i, j, k, n, m;
 
 // Function that a thread has to execute
 void *threadFunc(void *pArg) 
 {
-    // Time parameters
-    struct timespec     tp, ts;
-    ts.tv_nsec = 1000;                  // 1 ms for nanosleep
+    // Timer parameter
+    struct itimerspec   new_time, old_time;
+
+    // Clock parameter
+    struct timespec     tp;
+
+    // Event parameter
+    struct sigevent     event;
+
+    // Signal parameters
+    sigset_t            set;
+    int                 signum = SIGALRM;
 
     // Other parameters
     float               test = 0.95;    // Parameter for computational load
+
+    // Create event for timer
+    event.sigev_notify = SIGEV_THREAD_ID;          // Notify thread with a certain ID when event is called
+    event._sigev_un._tid = syscall(__NR_gettid);   // Get the thread ID
+    event.sigev_signo = signum;                    // Call SIGALARM ("signum") when event is started by timer
+
+    // Initialize signal
+    sigemptyset(&set);                             // Initialize signal
+    sigaddset(&set, signum);                       // Associate signum with the set signal
+    sigprocmask(SIG_BLOCK, &set, NULL);            // Initially block signal
+
+    // Create timer
+    if (timer_create(CLOCK_MONOTONIC, &event, &timerid) == -1)
+        perror("timer_create");
+
+    // Timer values
+    new_time.it_interval.tv_sec = 0;
+    new_time.it_interval.tv_nsec = 1000;    // 1 ms that the timer "sleeps" interval-wise
+    new_time.it_value.tv_sec = 0;
+    new_time.it_value.tv_nsec = 1000;       // 1 ms that the timer "sleeps" interval-wise
+
+    // Set timer
+    if (timer_settime(timerid, 0, &new_time, &old_time) == -1)
+        perror("timer_settime");
 
     // Let the thread perform computations and time it
     for(i = 0; i < 101; i++)
@@ -41,14 +80,13 @@ void *threadFunc(void *pArg)
         }
         /* ---------------------------------------- */
 
-        // Wait (until the sleep is finished)
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+        // Wait (until a signal is raised by the timer)
+        if (sigwait(&set, &signum) == -1)
+            perror("sigwait");
 
         // Store timing of loop
         if (clock_gettime(CLOCK_MONOTONIC, &tp) == -1)
-        {
-            perror("clock gettime");
-        }
+            perror("clock_gettime");
 
         /* ---------------- LOG TIME ---------------- */
         curr_sec = tp.tv_sec;
@@ -70,7 +108,7 @@ void *threadFunc(void *pArg)
         prev_sec = curr_sec;
         prev_nsec = curr_nsec;
         /* ------------------------------------------- */
-    }
+    } 
 
     return 0;
 }

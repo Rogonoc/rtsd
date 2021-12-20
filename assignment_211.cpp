@@ -1,19 +1,12 @@
 // Libraries
 #include <stdio.h>
+#include <pthread.h>
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
 #include <numeric>
-// Posix related libraries
-#include <pthread.h>
-#include <sys/mman.h> // Library to lock memory
-#include <limits.h>
-#include <sched.h>
-
-// Number of threads we want
-#define NUM_THREADS 1
 
 // Global parameters
 std::vector<double>     timing(100);
@@ -42,7 +35,7 @@ void *threadFunc(void *pArg)
         /* ---------------------------------------- */
 
         // Wait (until the sleep is finished)
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+        nanosleep(&ts, NULL);
 
         // Store timing of loop
         if (clock_gettime(CLOCK_MONOTONIC, &tp) == -1)
@@ -127,32 +120,13 @@ void information()
 int main(int argc, char **argv)
 {
     // Initialize parameters
-    struct sched_param param;
-    pthread_attr_t attr;
     pthread_t thread;
 
-    // Lock memory
-    mlockall(MCL_CURRENT|MCL_FUTURE);
-
-    // Initialize pthread attributes (default values)
-    pthread_attr_init(&attr);
-
-    // Set a specific stack size
-    pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
-
-    // Set scheduler policy and priotrity of pthread
-    pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
-    param.sched_priority = 80;
-    pthread_attr_setschedparam(&attr, &param);
-
-    // User scheduling parameters of attr
-    pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
-
-    // Create a pthread with specified attributes
-    pthread_create(&thread, &attr, threadFunc, NULL);
+    // Creating a pthread
+    pthread_create(&thread, NULL, threadFunc, NULL);
 
     // Join the thread and wait until it is done
-    pthread_join(thread NULL);
+    pthread_join(thread, NULL);
 
     // Print out recorded data
     information();
