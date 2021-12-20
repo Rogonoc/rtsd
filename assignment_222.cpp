@@ -16,7 +16,7 @@
 std::vector<double>     timing(100);
 double                  mean, var, rlt_std, min, max;
 double                  curr_sec, curr_nsec, prev_sec, prev_nsec;
-int                     i, j, k, n, m;
+int                     i, j, k, n, m, p;
 
 // Function that a thread has to execute
 void *threadFunc(void *pArg) 
@@ -82,7 +82,12 @@ void information()
     }
 
     // Mean
-    mean = accumulate(timing.begin(), timing.end(), 0) / timing.size();
+    mean = 0;
+    for (p = 0; p < timing.size(); p++)
+    {
+        mean += timing[p];
+    }
+    mean = mean / timing.size();
 
     // Variance
     var = 0;
