@@ -77,6 +77,8 @@ void *threadFunc(void *pArg)
         }
         /* ---------------------------------------- */
 
+        __real_printf("Making syscall")
+
         // Wait (until a signal is raised by the timer)
         if (sigwait(&set, &signum) == -1)
             perror("sigwait");
