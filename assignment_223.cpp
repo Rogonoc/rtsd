@@ -59,9 +59,9 @@ void *threadFunc(void *pArg)
 
     // Timer values     
     new_time.it_value.tv_sec = 0;               
-    new_time.it_value.tv_nsec = 100000000;      // 0.1 sec
+    new_time.it_value.tv_nsec = 1000000;      // 0.001 sec
     new_time.it_interval.tv_sec = 0;
-    new_time.it_interval.tv_nsec = 100000000;   // 0.1 sec
+    new_time.it_interval.tv_nsec = 1000000;   // 0.001 sec
 
     // Set timer
     if (timer_settime(timerid, 0, &new_time, &old_time) == -1)
