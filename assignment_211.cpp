@@ -53,7 +53,7 @@ void *threadFunc(void *pArg)
         }
         else if(curr_sec != prev_sec)
         {
-            timing[i-1] = double(1000000000) - prev_nsec + curr_nsec;
+            timing[i-1] =  double(1000000000) - prev_nsec + curr_nsec;
         }
         else
         {
