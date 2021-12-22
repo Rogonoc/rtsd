@@ -23,7 +23,7 @@ void *threadFunc(void *pArg)
 {
     // Time parameters
     struct timespec     tp, ts;
-    ts.tv_nsec = 1000;                  // 1 ms for nanosleep
+    ts.tv_nsec = 1000000;                  // 1 ms for nanosleep
 
     // Other parameters
     float               test = 0.95;    // Parameter for computational load
