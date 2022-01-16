@@ -45,16 +45,16 @@ void ReadConvert(const double* src, double *dst)
         // Negative turn
         if ( src[0] > ((encoderCount/2) + 1) )
         {
-            dst[0] = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0);
-            lastKnownGoodValue0 = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0);
-            initialCount0 = initialCount0 + lastKnownGoodValue0;
+            dst[0] = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0);              // in rad
+            lastKnownGoodValue0 = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0); // in rad
+            initialCount0 = initialCount0 + lastKnownGoodValue0; // in rad
         }
         // Positive turn
         else if ( src[0] < ((encoderCount/2) + 1) )
         {
-            dst[0] = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0) ) * (2 * (double)PI / countPerRev0);
-            lastKnownGoodValue0 = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0) ) * (2 * (double)PI / countPerRev0);
-            initialCount0 = initialCount0 + lastKnownGoodValue0;
+            dst[0] = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0) ) * (2 * (double)PI / countPerRev0);               // in rad
+            lastKnownGoodValue0 = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0); // in rad
+            initialCount0 = initialCount0 + lastKnownGoodValue0; // in rad
         }
 	}
 	else
@@ -68,16 +68,16 @@ void ReadConvert(const double* src, double *dst)
         // Negative turn
         if ( src[1] > ((encoderCount/2) + 1) )
         {
-            dst[1] = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);
-            lastKnownGoodValue1 = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);
-            initialCount1 = initialCount1 + lastKnownGoodValue1;
+            dst[1] = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);              // in rad
+            lastKnownGoodValue1 = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1); // in rad
+            initialCount1 = initialCount1 + lastKnownGoodValue1; // in rad
         }
         // Positive turn
-        else if ( src[0] < ((encoderCount/2) + 1) )
+        else if ( src[1] < ((encoderCount/2) + 1) )
         {
-            dst[1] = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);
-            lastKnownGoodValue1 = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);
-            initialCount1 = initialCount1 + lastKnownGoodValue1;
+            dst[1] = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);              // in rad
+            lastKnownGoodValue1 = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1); // in rad
+            initialCount1 = initialCount1 + lastKnownGoodValue1; // in rad
         }
 	}
 	else
