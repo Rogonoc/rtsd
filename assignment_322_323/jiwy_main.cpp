@@ -124,6 +124,9 @@ int main()
 	int P1_ENC = 0;
 	int P2_ENC = 1;
 
+	/* CONSTRUCTOR FOR ICOCOMM */
+	IcoComm::IcoComm(int _sendParameters[], int _receiveParameters[]);
+
 	/* CREATE PARAM FOR CONTROLLER */
 	int _sendParameters [] = {P1_PWM, -1, P2_PWM, -1, -1, -1, -1, -1};
 	int _receiveParameters [] = {P1_ENC, -1, -1, P2_ENC, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -132,22 +135,18 @@ int main()
 	icoComm.SetReadConvertFcn(&ReadConvert);   // Scaling + filtering of input
 	icoComm.SetWriteConvertFcn(&WriteConvert); // Scaling + filtering of output
 
-	frameworkComm *controller_uPorts[] = 
-	{
+	frameworkComm *controller_uPorts[] = {
 		new IDDPCom(_sendParameters),
-		icoComm
-	};
+		icoComm};
 
-	frameworkComm *controller_yPorts[] =
-	{
+	frameworkComm *controller_yPorts[] = {
 		new IDDPComm(_receiveParameters),
-		icoComm
-	};
+		icoComm};
 
 	/* CREATE WRAPPER FOR CONTROLLER */
 	Controller *controller_class = new Controller;
 	runnable *controller_runnable = new wrapper<Controller>(
-		controller_class, controller_uPorts, controller_yPorts, 2, 1) // Two inputs (setpoint, encoder), one output (control signal)
+		controller_class, controller_uPorts, controller_yPorts, 2, 1); // Two inputs (setpoint, encoder), one output (control signal)
 
 	/* INITIALIZE XENOTHREAD FOR CONTROLLER */
 	xenoThread controllerClass(controller_runnable);
@@ -158,13 +157,12 @@ int main()
 
     /* WAIT FOR CNTRL-C */
     timespec t = {.tv_sec=0, .tv_nsec=100000000}; // 1/10 second
-    while (!exitbool)
-    {
+    while (!exitbool) {
         // Let the threads do the real work
         //nanosleep(&t, NULL);
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, NULL);
         // Wait for Ctrl-C to exit
-    }
+    };
     printf("Ctrl-C was pressed: Stopping gracefully...\n");
 
     /* CLEANUP HERE */
