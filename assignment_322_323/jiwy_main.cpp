@@ -124,14 +124,11 @@ int main()
 	int P1_ENC = 0;
 	int P2_ENC = 1;
 
-	/* CONSTRUCTOR FOR ICOCOMM */
-	IcoComm::IcoComm(int _sendParameters[], int _receiveParameters[]);
-
 	/* CREATE PARAM FOR CONTROLLER */
 	int _sendParameters [] = {P1_PWM, -1, P2_PWM, -1, -1, -1, -1, -1};
 	int _receiveParameters [] = {P1_ENC, -1, -1, P2_ENC, -1, -1, -1, -1, -1, -1, -1, -1};
 
-	icoComm = new IcoComm(_sendParameters, _receiveParameters);
+	IcoComm icoComm = new IcoComm(_sendParameters, _receiveParameters);
 	icoComm.SetReadConvertFcn(&ReadConvert);   // Scaling + filtering of input
 	icoComm.SetWriteConvertFcn(&WriteConvert); // Scaling + filtering of output
 
