@@ -31,31 +31,31 @@ void exit_handler(int s)
 /* ReadConvert */
 void ReadConvert(const double* src, double *dst)
 {
-	static double encoderCount = 16383;
-	static double initialCount0 = 0;
-	static double initialCount1 = 0;
-	static double countPerRev0 = 5000;
-	static double countPerRev1 = 2000;
-	static double lastKnownGoodValue0 = 0;
+    static double encoderCount = 16383;
+    static double initialCount0 = 0;
+    static double initialCount1 = 0;
+    static double countPerRev0 = 5000;
+    static double countPerRev1 = 2000;
+    static double lastKnownGoodValue0 = 0;
 	static double lastKnownGoodValue1 = 0;
 
 	/* Scaling + Filtering (upper motor) */
 	if ( (src[0] > encoderCount) || (src[0] < 0) )
 	{
-	// Negative turn
-	if ( src[0] > ((encoderCount/2) + 1) )
-	{
-	    dst[0] = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0);              // in rad
-	    lastKnownGoodValue0 = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0); // in rad
-	    initialCount0 = initialCount0 + lastKnownGoodValue0; // in rad
-	}
-	// Positive turn
-	else if ( src[0] < ((encoderCount/2) + 1) )
-	{
-	    dst[0] = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0) ) * (2 * (double)PI / countPerRev0);               // in rad
-	    lastKnownGoodValue0 = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0); // in rad
-	    initialCount0 = initialCount0 + lastKnownGoodValue0; // in rad
-	}
+        // Negative turn
+        if ( src[0] > ((encoderCount/2) + 1) )
+        {
+            dst[0] = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0);              // in rad
+            lastKnownGoodValue0 = ( initialCount0 - (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0); // in rad
+            initialCount0 = initialCount0 + lastKnownGoodValue0; // in rad
+        }
+        // Positive turn
+        else if ( src[0] < ((encoderCount/2) + 1) )
+        {
+            dst[0] = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0);               // in rad
+            lastKnownGoodValue0 = ( initialCount0 + (encoderCount - abs(src[0] - lastKnownGoodValue0)) ) * (2 * (double)PI / countPerRev0); // in rad
+            initialCount0 = initialCount0 + lastKnownGoodValue0; // in rad
+        }
 	}
 	else
 	{
@@ -65,20 +65,20 @@ void ReadConvert(const double* src, double *dst)
 	/* Scaling + Filtering (lower motor) */
 	if ( (src[1] > encoderCount) || (src[1] < 0) )
 	{
-	// Negative turn
-	if ( src[1] > ((encoderCount/2) + 1) )
-	{
-	    dst[1] = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);              // in rad
-	    lastKnownGoodValue1 = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1); // in rad
-	    initialCount1 = initialCount1 + lastKnownGoodValue1; // in rad
-	}
-	// Positive turn
-	else if ( src[1] < ((encoderCount/2) + 1) )
-	{
-	    dst[1] = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);              // in rad
-	    lastKnownGoodValue1 = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1); // in rad
-	    initialCount1 = initialCount1 + lastKnownGoodValue1; // in rad
-	}
+        // Negative turn
+        if ( src[1] > ((encoderCount/2) + 1) )
+        {
+            dst[1] = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);              // in rad
+            lastKnownGoodValue1 = ( initialCount1 - (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1); // in rad
+            initialCount1 = initialCount1 + lastKnownGoodValue1; // in rad
+        }
+        // Positive turn
+        else if ( src[1] < ((encoderCount/2) + 1) )
+        {
+            dst[1] = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1);              // in rad
+            lastKnownGoodValue1 = ( initialCount1 + (encoderCount - abs(src[1] - lastKnownGoodValue1)) ) * (2 * (double)PI / countPerRev1); // in rad
+            initialCount1 = initialCount1 + lastKnownGoodValue1; // in rad
+        }
 	}
 	else
 	{
@@ -89,12 +89,12 @@ void ReadConvert(const double* src, double *dst)
 /* WriteConvert */
 void WriteConvert(const double* src, double *dst)
 {
-	static double motorRange = 2047; // In number scale
-	static double motorVolt = 12;    // In volt
+    static double motorRange = 2047; // In number scale
+    static double motorVolt = 12;    // In volt
 	static double lastKnownGoodValue = 0;
 
 	/* Scaling + Filtering (both motors) */
-	if ( (src[0] > motorRange) || (src[0] < 0) )
+	if ( (src[0] > motorRange) || (src[0] < -motorRange) )
 	{
 		dst[0] = (src[0]/motorVolt) * motorRange;             // Motor 1 of 12 V, scaled to [-2047, 2047]
 		dst[1] = (src[0]/motorVolt) * motorRange;             // Motor 2 of 12 V, scaled to [-2047, 2047]
@@ -110,14 +110,14 @@ void WriteConvert(const double* src, double *dst)
 /* MAIN FUNCTION */
 int main()
 {
-	/* CREATE CNTRL-C HANDLER */
-	signal(SIGINT, exit_handler);
+    /* CREATE CNTRL-C HANDLER */
+    signal(SIGINT, exit_handler);
 
-	printf("Press Ctrl-C to stop program\n"); // Note: this will 
-	// not kill the program; just jump out of the wait loop. Hence,
-	// you can still do proper clean-up. You are free to alter the
-	// way of determining when to stop (e.g., run for a fixed time).
-
+    printf("Press Ctrl-C to stop program\n"); // Note: this will 
+        // not kill the program; just jump out of the wait loop. Hence,
+        // you can still do proper clean-up. You are free to alter the
+        // way of determining when to stop (e.g., run for a fixed time).
+    
 	/* PARAMETERS */
 	int P1_PWM = 0;
 	int P2_PWM = 0;
@@ -128,7 +128,7 @@ int main()
 	int _sendParameters [] = {P1_PWM, -1, P2_PWM, -1, -1, -1, -1, -1};
 	int _receiveParameters [] = {P1_ENC, -1, -1, P2_ENC, -1, -1, -1, -1, -1, -1, -1, -1};
 
-	icoComm = new IcoComm(int _sendParameters[], int _receiveParameters[]);
+	icoComm = new IcoComm(_sendParameters, _receiveParameters);
 	icoComm.SetReadConvertFcn(&ReadConvert);   // Scaling + filtering of input
 	icoComm.SetWriteConvertFcn(&WriteConvert); // Scaling + filtering of output
 
@@ -156,22 +156,22 @@ int main()
 	/* START THREADS */
 	controllerClass.start("controller"); // Controller should receive topic about computed setpoint?
 
-	/* WAIT FOR CNTRL-C */
-	timespec t = {.tv_sec=0, .tv_nsec=100000000}; // 1/10 second
-	while (!exitbool)
-	{
-	// Let the threads do the real work
-	//nanosleep(&t, NULL);
-	clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, NULL);
-	// Wait for Ctrl-C to exit
-	}
-	printf("Ctrl-C was pressed: Stopping gracefully...\n");
+    /* WAIT FOR CNTRL-C */
+    timespec t = {.tv_sec=0, .tv_nsec=100000000}; // 1/10 second
+    while (!exitbool)
+    {
+        // Let the threads do the real work
+        //nanosleep(&t, NULL);
+        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, NULL);
+        // Wait for Ctrl-C to exit
+    }
+    printf("Ctrl-C was pressed: Stopping gracefully...\n");
 
-	/* CLEANUP HERE */
+    /* CLEANUP HERE */
 	controllerClass.stopThread();
 	controller_runnable->~xenoThread();
 	controller_runnable->~runnable();
 
 	/* FINISH */
-	return 0;
+    return 0;
 }
